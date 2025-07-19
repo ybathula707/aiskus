@@ -1,0 +1,20 @@
+# Python compiled files
+__pycache__/
+*.pyc
+
+# Optional: pytest cache
+.pytest_cache/
+
+# Optional: mypy or other linters
+.mypy_cache/
+
+# Flask instance path (can contain local configs or databases)
+instance/
+
+# Virtual environment
+.venv/
+env/
+
+# Editor files
+.vscode/
+.idea/
