@@ -8,6 +8,8 @@ __pycache__/
 # Optional: mypy or other linters
 .mypy_cache/
 
+.cpython-313.pyc/
+
 # Flask instance path (can contain local configs or databases)
 instance/
 
