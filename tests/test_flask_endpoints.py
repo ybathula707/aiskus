@@ -7,6 +7,8 @@ from app.app import create_app
 def client():
     app = create_app()
     app.config["TESTING"] = True
+    #creating test dummpy client to dpendency inject
+    #this client will call our endpoints and allow us the test the functions
     with app.test_client() as client:
         yield client
 
