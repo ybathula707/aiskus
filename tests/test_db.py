@@ -7,7 +7,9 @@ import tempfile
 
 import pytest
 
-from app.db import get_db, close_db, init_db
+from aiskus_app.db import get_db, close_db, init_db
+from aiskus_app import create_app
+
 
 # Setup and teardown
 
@@ -19,7 +21,6 @@ def app_with_temp_db():
     db_path = os.path.join(temp_dir, "test.sqlite3")
 
     # Patch the app.config.DATABASE to point to our temp file
-    from app.app import create_app  # Adjust if your app factory is elsewhere
     app = create_app()
     app.config.update({"DATABASE": db_path})
 
@@ -80,7 +81,6 @@ def test_invalid_insert_and_fetch(app_with_temp_db):
         close_db()
 
     assert "Incorrect number of bindings supplied" in str(execinfo.value) or "incompatible" in str(execinfo.value).lower()
-
 
 
 def test_invalid_db_path():

@@ -1,7 +1,8 @@
 import pytest
 import logging
+from aiskus_app import create_app
+
 logging.basicConfig(level=logging.INFO)
-from app.app import create_app
 
 @pytest.fixture
 def client():

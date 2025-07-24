@@ -1,4 +1,4 @@
-from app.app import create_app
+from aiskus_app import create_app
 
 app = create_app()
 
