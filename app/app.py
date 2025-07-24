@@ -7,11 +7,24 @@ from .services.questionProcessor import QuestionProcessor
 
 def create_app():
 
-    # Instantiating a Flask as ' app'
+    # Instantiating a Flask object as named 'app'
     app = Flask(__name__)
+    # telling app where to create the sqlite live db file
+    app.config.from_mapping(
+            DATABASE="instance/themes_and_summaries.sqlite3"
+        )
+    
     """
-    setting up a singleton intance of the QuestionProcessor class for the lifecycle of the flask applicaition.
-    Flask app will manage all questionsfed into the app, through a single processor. 
+    calling init_app which registers DB CLI commands and the teardown function to close the
+    connection at the end of a request
+    """
+    from . import db
+    db.init_app(app)
+
+    app.session_question_processor = QuestionProcessor()
+    """
+    setting up a singleton intance of the QuestionProcessor class for the lifecycle of the flask applicaition object.
+    Flask app object will manage all questions fed into the app, through a single processor. 
     This will help retain session context within the runitime of the model, across batches of messages. 
     Question is there a way to wipe the context of the model between sessions?
 
@@ -19,7 +32,6 @@ def create_app():
     requires persisted information
     
     """
-    app.session_question_processor = QuestionProcessor()
 
     @app.route('/')
     def main():
@@ -90,3 +102,22 @@ def create_app():
     
     return app
 
+
+"""
+TODO:
+
+create_app() app facotry should be moved to __init__.py
+Routes should be moved to blueprint directory registerd in __init__.py
+
+__init__.py basically only registers components (blueprints) of the application, adds configurations
+and handle app wide hooks. Sohuld not be defining routes here
+
+__init__.py ex:
+from flask import Flask
+from .routes.api import api_bp
+
+def create_app():
+    app = Flask(__name__)
+    app.register_blueprint(api_bp)
+    return app
+"""
