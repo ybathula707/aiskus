@@ -26,24 +26,30 @@ class QuestionProcessor:
     def processQuestion(self,question: Question):
 
         try: 
-            response = {}
-            self.batch_questions.append( f'student question & ask time: { question}')
-            print(f"batched messages: {self.batch_questions}")
+            response = ""
+            summary_obj = None
+            print(question)
+            self.batch_questions.append( f'student question & ask time: {question}')
             #once batch size is around 10, we send the array to the Ollama Client liek:
             #Ollama_Client
             
             if len(self.batch_questions) >= 10:
                 response=self.ollama_client.summary_request(self.batch_questions)
+                print("==========")
+                print(response)
+                print("==========")
+
                 contents = response.message.content
                 if contents:
                     start = contents.find('{')
-                    end = contents.find('}')
+                    end = contents.find('}') + 1
                     cleaned_data = json.loads(contents[start:end])
                     summary_obj=Summary(first_question_time=cleaned_data['first_question_time'],
                                         last_question_time=cleaned_data['last_question_time'],
                                         themes=cleaned_data['themes'],
                                         summary=cleaned_data['summary'],
                                         queried=False)
+                print(f"batched messages: {self.batch_questions}")
             
                 #best way to do this?
             return summary_obj
