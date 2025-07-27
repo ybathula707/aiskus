@@ -1,6 +1,7 @@
 from ..models.question import Question
 from ..clients.ollama_client import OllamaClient
 from ..models.summary import Summary
+import json
 # import db
 
 class QuestionProcessor:
@@ -14,31 +15,38 @@ class QuestionProcessor:
     def __init__(self):
         self.batch_questions = []
         self.batch_body:str = ""
+        self.ollama_client = OllamaClient()
         return
+    
+    '''
+        Append question into batch array.
+        
+    '''
     
     def processQuestion(self,question: Question):
 
         try: 
             response = {}
-            self.batch_questions.append(question)
-            print-f"Questions received: {len(self.batch_questions)}"
-            self.batch_body += f"Question: {question.question_body}, " 
-            self.batch_body += f", Question: {question.question_body}"
-            print(f"batched messages: {self.batch_body}")
+            self.batch_questions.append( f'student question & ask time: { question}')
+            print(f"batched messages: {self.batch_questions}")
             #once batch size is around 10, we send the array to the Ollama Client liek:
             #Ollama_Client
             
-            # if len(self.batch_questions) >= 10:
-            #     response=OllamaClient.summary_request_POST(self.batch_questions)
+            if len(self.batch_questions) >= 10:
+                response=self.ollama_client.summary_request(self.batch_questions)
+                contents = response.message.content
+                if contents:
+                    start = contents.find('{')
+                    end = contents.find('}')
+                    cleaned_data = json.loads(contents[start:end])
+                    summary_obj=Summary(first_question_time=cleaned_data['first_question_time'],
+                                        last_question_time=cleaned_data['last_question_time'],
+                                        themes=cleaned_data['themes'],
+                                        summary=cleaned_data['summary'],
+                                        queried=False)
             
-            #     summary_obj=Summary(response['message']['contents'])
-
-            #     db.get_db()
-            #     db.execute()
-            #     db.commit()
-            #     self.batch_questions.clear()
-
-            return
+                #best way to do this?
+            return summary_obj
             
         except Exception as e:
             print(f"Error receiving message {e}")

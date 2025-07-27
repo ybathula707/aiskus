@@ -3,16 +3,25 @@ from ollama import Client
 from ..models.question import Question
 
 question_prompt= """
-                    Below is a list of questions asked by students who sitting in a lecture. I will send them to you as a list.
-                    Carefully review all the questions and:
-                    Identify and list the main themes or patterns behind the students' confusion. 
+                    1. Identify and list the main themes or patterns behind the students' confusion. Your themes should concisely communicate overlapping patterns if they exist.
 
-                    Summarize, in one paragraph, the knowledge gaps and difficulties these questions reveal about the students' understanding.
-                    In a second paragraph, provide clear, practical advice for the teacher, specifying what concepts or explanations should be revisited or strengthened during the lecture.
-                    Please format your response with the following structure:
+                    2. Provide a summary as a single string containing exactly two paragraphs:
 
-                    Themes = [Theme 1, Theme 2, Theme 3 … ]
-                    Summary of Knowledge Gaps & Advice to the Teacher: [Two paragraphs]
+                    - The first paragraph (tagged with "(1)") should summarize the knowledge gaps and difficulties revealed by the questions.  
+                    - The second paragraph (tagged with "(2)") should provide clear and practical advice for the teacher on which concepts or explanations to revisit or strengthen during the lecture.  
+
+                    **Each paragraph must start with its tag "(1)" or "(2)" exactly, and the two paragraphs should be separated by a newline character inside the single string.**  
+                    For example:
+
+                    "(1) This paragraph summarizes the knowledge gaps...  
+                    (2) This paragraph gives advice to the teacher..."
+
+                    3. Return the full response strictly as a JSON object with the following keys and value types:
+                    first_question_time = first_question_time
+                    last_question_time = last_question_time
+                    themes = themes array list
+                    summary = the two paragraphs as one string 
+                    
 
                     I will also be providing to you chat context in the form of a message history, which contains previous user
                     queries, along with assistant responses. Please use the message history to provide accurate responses that

@@ -1,8 +1,10 @@
 import ollama
 from ollama import Client
 import pytest
+import json
 import time
 from aiskus_app.models.question import Question
+from aiskus_app.models.summary import Summary
 from aiskus_app.clients.ollama_client import OllamaClient
 
 
@@ -23,7 +25,7 @@ def test_summary_request(ollama_client):
     response = ollama_client.summary_request(question_objects_array)
 
     print(response.message.content)
-    assert response.message.content == "Fail Purposely" 
+    assert response.message.content is not None
 
 def test_summary_realistic(ollama_client):
     question1 = Question(
@@ -82,5 +84,26 @@ def test_summary_realistic(ollama_client):
 
     response = ollama_client.summary_request(question_objects_array)
     print(response.message.content)
-    assert response.message.content == "Fail Purposely" 
+
+    start =response.message.content.find('{')
+    end =response.message.content.find('}') + 1
+
+    if start != -1 and end != -1:
+        cleaned = response.message.content[start:end]
+        data=json.loads(cleaned)
+        print(data)
+    else:
+        print("No JSON found")
+
+    if data:
+        summary_obj = Summary(first_question_time=data["first_question_time"],
+                              last_question_time=data["last_question_time"],
+                              themes=data["themes"],
+                              summary=data["summary"],
+                              queried=False)
+        print("====Here is the batch summary: ====", summary_obj.summary)
+
+    assert summary_obj.summary is not None 
+    assert '(1)' in summary_obj.summary, "summary object missing (1) attribute"
+    assert '(2)' in summary_obj.summary, "summary object missing (2) attribute"
 
