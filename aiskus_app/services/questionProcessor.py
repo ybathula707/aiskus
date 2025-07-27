@@ -1,4 +1,8 @@
 from ..models.question import Question
+from ..clients.ollama_client import OllamaClient
+from ..models.summary import Summary
+# import db
+
 class QuestionProcessor:
 
 # shoudl the QuestionProcessor class have its own instance of ollama_clent?
@@ -15,14 +19,27 @@ class QuestionProcessor:
     def processQuestion(self,question: Question):
 
         try: 
+            response = {}
             self.batch_questions.append(question)
-            print(f"Questions received: {len(self.batch_questions)}")
+            print-f"Questions received: {len(self.batch_questions)}"
             self.batch_body += f"Question: {question.question_body}, " 
             self.batch_body += f", Question: {question.question_body}"
             print(f"batched messages: {self.batch_body}")
             #once batch size is around 10, we send the array to the Ollama Client liek:
             #Ollama_Client
+            
+            # if len(self.batch_questions) >= 10:
+            #     response=OllamaClient.summary_request_POST(self.batch_questions)
+            
+            #     summary_obj=Summary(response['message']['contents'])
+
+            #     db.get_db()
+            #     db.execute()
+            #     db.commit()
+            #     self.batch_questions.clear()
+
             return
+            
         except Exception as e:
             print(f"Error receiving message {e}")
             return
