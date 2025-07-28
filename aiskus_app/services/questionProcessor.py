@@ -1,8 +1,9 @@
 from ..models.question import Question
 from ..clients.ollama_client import OllamaClient
 from ..models.summary import Summary
+from aiskus_app.db import get_db, close_db
 import json
-# import db
+
 
 class QuestionProcessor:
 
@@ -34,12 +35,18 @@ class QuestionProcessor:
             #Ollama_Client
             
             if len(self.batch_questions) >= 10:
+
                 response=self.ollama_client.summary_request(self.batch_questions)
-                print("==========")
-                print(response)
-                print("==========")
+                # print("==========")
+                # print(response)
+                # print("==========")
 
                 contents = response.message.content
+
+                if not contents:
+                   raise Exception
+                   
+                
                 if contents:
                     start = contents.find('{')
                     end = contents.find('}') + 1
@@ -51,12 +58,46 @@ class QuestionProcessor:
                                         queried=False)
                 print(f"batched messages: {self.batch_questions}")
             
-                #best way to do this?
+                '''
+                    Get the DB,
+                    use cursor to insert into themes_and_summaries
+
+                '''
+                db = get_db()
+                cursor = db.cursor()
+
+                cursor.execute(
+                    """ 
+                    INSERT INTO themes_and_summaries 
+                    (first_question_time, last_question_time, themes_json, summary_str, queried)
+                    VALUES(?,?,?,?,?)
+                    """,
+                    (summary_obj.first_question_time, 
+                     summary_obj.last_question_time, 
+                     json.dumps(summary_obj.themes), 
+                     summary_obj.summary, 
+                     0)
+
+                )
+                db.commit()
+                c = cursor.execute(
+                    "SELECT summary_str FROM themes_and_summaries WHERE queried = ?", (0,)
+                    )
+
+                row = c.fetchone()
+                print(f"Inserted row: {row['summary_str']}")
+
+                cursor.close()     # Always explicitly close cursor
+                close_db()         # You can explicitly close; if inside a Flask request, teardown should do this
+            # insert logs where print debigs exist
+            
             return summary_obj
             
         except Exception as e:
             print(f"Error receiving message {e}")
             return
+
+
 
 
 
