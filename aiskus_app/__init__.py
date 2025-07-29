@@ -3,7 +3,6 @@ from flask import Flask
 from .services.questionProcessor import QuestionProcessor
 
 
-
 def create_app():
     app = Flask(__name__)
     app.config.from_mapping(
@@ -29,6 +28,10 @@ def create_app():
     from .blueprints import ask
     app.register_blueprint(ask.bp)
     app.add_url_rule('/', endpoint='index')
+
+    # from .api import student
+    # app.register_blueprint(student.student_aiskus_bp)
+
 
 
     return app

@@ -89,8 +89,9 @@ class QuestionProcessor:
 
                 cursor.close()     # Always explicitly close cursor
                 close_db()         # You can explicitly close; if inside a Flask request, teardown should do this
-            # insert logs where print debigs exist
-            
+                self.batch_questions.clear()
+
+            #self.batch_questions.clear()
             return summary_obj
             
         except Exception as e:

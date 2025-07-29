@@ -17,7 +17,7 @@ question_prompt= """
                     (2) This paragraph gives advice to the teacher..."
 
                     3. Return the full response strictly as a JSON object with the following keys and value types:
-                    first_question_time = first_question_time
+                    first_question_time = first_question_time (int)
                     last_question_time = last_question_time
                     themes = themes array list
                     summary = the two paragraphs as one string 

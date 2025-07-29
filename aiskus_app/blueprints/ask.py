@@ -74,3 +74,8 @@ def audience_ask():
         return jsonify({"status": "failure",
                         "message": "question unable to be processed",
                         "error" : f"{e}"}), 500
+    
+
+# @bp.route('/summaries/latest', methods=['GET'])
+# def teacher_summaries():
+    
