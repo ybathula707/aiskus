@@ -15,7 +15,8 @@ def create_app():
     from . import db
     db.init_app(app)
 
-        # Run database initialization automatically at startup
+    # Run database initialization automatically at startup
+    # add a cleanup step here 
     with app.app_context():
         try:
             db.init_db()
@@ -37,10 +38,12 @@ def create_app():
 
     from .blueprints import ask
     app.register_blueprint(ask.bp)
-    app.add_url_rule('/', endpoint='index')
+    # app.add_url_rule('/', endpoint='index')
 
     from .api.student import student_aiskus_bp
     app.register_blueprint(student_aiskus_bp)
+ 
+
 
 
 

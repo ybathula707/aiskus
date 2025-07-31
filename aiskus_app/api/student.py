@@ -5,7 +5,7 @@ import time
 
 student_aiskus_bp= Blueprint('student_aiskus_page', __name__, template_folder='/templates/student/index.html')
 
-@student_aiskus_bp.route('/student')
+@student_aiskus_bp.route('/index')
 def student_home():
     return render_template('student/index.html')
 
