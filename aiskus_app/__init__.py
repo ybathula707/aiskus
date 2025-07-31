@@ -8,10 +8,20 @@ def create_app():
     app.config.from_mapping(
             DATABASE="instance/themes_and_summaries.sqlite3"
         )
+    # Ensure instance folder exists
+    os.makedirs(app.instance_path, exist_ok=True)
     
     #registering db in application instance using db helper method 
     from . import db
     db.init_app(app)
+
+        # Run database initialization automatically at startup
+    with app.app_context():
+        try:
+            db.init_db()
+            app.logger.info("Database initialized on startup.")
+        except Exception as e:
+            app.logger.error(f"Database initialization failed: {e}")
 
     app.session_question_processor = QuestionProcessor()
     """
@@ -29,8 +39,8 @@ def create_app():
     app.register_blueprint(ask.bp)
     app.add_url_rule('/', endpoint='index')
 
-    # from .api import student
-    # app.register_blueprint(student.student_aiskus_bp)
+    from .api.student import student_aiskus_bp
+    app.register_blueprint(student_aiskus_bp)
 
 
 

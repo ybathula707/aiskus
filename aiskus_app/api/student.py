@@ -3,10 +3,12 @@ from jinja2 import TemplateNotFound
 from ..models.question import Question
 import time
 
+student_aiskus_bp= Blueprint('student_aiskus_page', __name__, template_folder='/templates/student/index.html')
 
-#student blueprint 
-#/POST ask endpoint
-student_aiskus_bp= Blueprint('student_aiskus_page', __name__, template_folder='/static/student')
+@student_aiskus_bp.route('/student')
+def student_home():
+    return render_template('student/index.html')
+
 @student_aiskus_bp.route('/aiskus/ask', methods=['POST'])
 def post_question():
     """
@@ -14,17 +16,22 @@ def post_question():
     Return 400 if req was malformed due to missing data or null request
     """
     try:
-        question_body_str= request.form("question_body")
+        data = request.get_json()
+        question_body_str = data.get('question_body') if data else None
+
         if not question_body_str:   
             return jsonify({"status": "failure",
                             "message": "malformed question body",
                             "error": f"{e}",}), 400
-        student_question=Question(question_body=question_body_str, question_asked_time=time.time())
+        
+        student_question=Question(
+            question_body=question_body_str, 
+            question_asked_time=time.time()
+            )
         current_app.session_question_processor.processQuestion(student_question)
 
         return jsonify({"status": "success",
-                        "message": "message queued successfully",
-                        }), 200
+                        "message": "message queued successfully",}), 200
     except Exception as e:
         return jsonify({"status": "internal failure",
                         "message": "Question unable to be processe dat this time",

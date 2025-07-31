@@ -55,7 +55,7 @@ class OllamaClient:
         response = self.ollama_client_object.chat(
             model='gemma3n:e4b', 
             messages=[{'role': 'user','content': self.message_history},
-                      {'role': 'user', 'content': question_input}
+                      {'role': 'user', 'content': question_input},
                     ]
             )
         

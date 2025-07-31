@@ -80,11 +80,15 @@ class QuestionProcessor:
 
                 )
                 db.commit()
-                c = cursor.execute(
-                    "SELECT summary_str FROM themes_and_summaries WHERE queried = ?", (0,)
-                    )
+                c = cursor.execute("SELECT * FROM themes_and_summaries")
 
-                row = c.fetchone()
+
+                rows = c.fetchall()
+                for row in rows:
+                    print(row['summary_str'])
+                                
+                print(f"Current Summary: {summary_obj.summary}")
+
                 print(f"Inserted row: {row['summary_str']}")
 
                 cursor.close()     # Always explicitly close cursor
