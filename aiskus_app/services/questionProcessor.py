@@ -2,6 +2,7 @@ from ..models.question import Question
 from ..clients.ollama_client import OllamaClient
 from ..models.summary import Summary
 from aiskus_app.db import get_db, close_db
+from flask import current_app
 import json
 
 
@@ -16,7 +17,6 @@ class QuestionProcessor:
     def __init__(self):
         self.batch_questions = []
         self.batch_body:str = ""
-        self.ollama_client = OllamaClient()
         return
     
     '''
@@ -25,6 +25,10 @@ class QuestionProcessor:
     '''
     
     def processQuestion(self,question: Question):
+
+        if question.question_body is None or "":
+            print(f"Empty question body will not be processed")
+            return
 
         try: 
             response = ""
@@ -36,7 +40,7 @@ class QuestionProcessor:
             
             if len(self.batch_questions) >= 10:
 
-                response=self.ollama_client.summary_request(self.batch_questions)
+                response=current_app.session_ollama_client.summary_request(self.batch_questions)
                 # print("==========")
                 # print(response)
                 # print("==========")
@@ -69,7 +73,7 @@ class QuestionProcessor:
                 cursor.execute(
                     """ 
                     INSERT INTO themes_and_summaries 
-                    (first_question_time, last_question_time, themes_json, summary_str, queried)
+                    (first_question_time, last_question_time, themes, summary_str, queried)
                     VALUES(?,?,?,?,?)
                     """,
                     (summary_obj.first_question_time, 
@@ -81,15 +85,11 @@ class QuestionProcessor:
                 )
                 db.commit()
                 c = cursor.execute("SELECT * FROM themes_and_summaries")
-
-
                 rows = c.fetchall()
-                for row in rows:
-                    print(row['summary_str'])
+
                                 
                 print(f"Current Summary: {summary_obj.summary}")
 
-                print(f"Inserted row: {row['summary_str']}")
 
                 cursor.close()     # Always explicitly close cursor
                 close_db()         # You can explicitly close; if inside a Flask request, teardown should do this

@@ -116,7 +116,7 @@ def test_bigger(ollama_client, question_processor, app_with_temp_db):
 
             # Query the latest inserted row assuming queried=False and times matching those in the summary_obj
         cursor.execute("""
-                SELECT first_question_time, last_question_time, themes_json, summary_str, queried
+                SELECT first_question_time, last_question_time, themes, summary_str, queried
                 FROM themes_and_summaries
                 WHERE first_question_time = ? AND last_question_time = ?
                 ORDER BY rowid DESC LIMIT 1
@@ -128,7 +128,7 @@ def test_bigger(ollama_client, question_processor, app_with_temp_db):
         assert row is not None, "Summary entry not found in the database."
 
             # Check each relevant field matches what we expect
-        db_themes = json.loads(row["themes_json"])  # deserialize JSON
+        db_themes = json.loads(row["themes"])  # deserialize JSON
         db_summary = row["summary_str"]
         db_queried = row["queried"]
 

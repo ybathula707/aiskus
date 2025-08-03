@@ -3,13 +3,14 @@ from jinja2 import TemplateNotFound
 from ..models.question import Question
 import time
 
-student_aiskus_bp= Blueprint('student_aiskus_page', __name__, template_folder='/templates/student/index.html')
+student_aiskus_bp= Blueprint('student_aiskus_page', __name__, template_folder='static/student/ask_page.html')
 
-@student_aiskus_bp.route('/index')
+@student_aiskus_bp.route('/student/boop')
 def student_home():
-    return render_template('student/index.html')
+    return render_template('student/ask_page.html')
 
-@student_aiskus_bp.route('/aiskus/ask', methods=['POST'])
+
+@student_aiskus_bp.route('/student/send_question', methods=['POST'])
 def post_question():
     """
     Extract JSON from response object attribute question_body
@@ -34,10 +35,9 @@ def post_question():
                         "message": "message queued successfully",}), 200
     except Exception as e:
         return jsonify({"status": "internal failure",
-                        "message": "Question unable to be processe dat this time",
+                        "message": "Question unable to be processed at this time",
                         "arror": f"{e}" }), 500
     
-
 
     """ 
     Yoshi Business logic Note

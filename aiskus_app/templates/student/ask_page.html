@@ -381,7 +381,7 @@
         </div>
 
         <div class="footer-note">
-            <p>Your questions help us improve the learning experience for everyone, and helps professor read your mind &lt;3</p>
+            <p> Help professor read your mind &lt;3 Your questions improve the learning experience for everyone !</p>
         </div>
     </div>
 
@@ -415,7 +415,7 @@
         submitBtn.classList.add('clicked');
         setTimeout(() => submitBtn.classList.remove('clicked'), 150);
         
-        fetch("/aiskus/ask", {
+        fetch("/student/send_question", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ question_body: q })

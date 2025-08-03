@@ -17,6 +17,30 @@ def ollama_client():
     ollama_test_client= OllamaClient()
     yield ollama_test_client
 
+@pytest.fixture
+def sample_metadata_list():
+    """Create sample metadata that simulates what would come from the database"""
+    metadata1 = {
+        'id': 1,
+        'themes': json.dumps(["two pointer method", "array sorting", "algorithm confusion"]),
+        'summary_str': '(1) Students demonstrate fundamental gaps in understanding the two pointer technique, particularly struggling with pointer movement logic and the necessity of sorting arrays beforehand.\n(2) Instructors should provide more visual demonstrations of pointer movement, use step-by-step traced examples, and explain the relationship between sorting and the algorithm\'s correctness.\n(3) Students show high engagement but growing frustration with algorithmic thinking.'
+    }
+    
+    metadata2 = {
+        'id': 2,
+        'themes': json.dumps(["loop optimization", "infinite loops", "pointer increment"]),
+        'summary_str': '(1) Students are confused about loop termination conditions and proper pointer advancement, leading to infinite loops and incorrect algorithm implementation.\n(2) Teachers should focus on debugging strategies, provide flowchart representations of the algorithm, and emphasize testing with small examples.\n(3) Students appear overwhelmed but determined to understand the concept.'
+    }
+    
+    metadata3 = {
+        'id': 3,
+        'themes': json.dumps(["data structures", "linked lists vs arrays", "algorithm application"]),
+        'summary_str': '(1) There is confusion about when and where two pointer techniques can be applied, specifically regarding different data structures and their constraints.\n(2) Instructors should create a comparison chart of data structures, provide multiple use cases, and demonstrate adaptations of the technique.\n(3) Curious students seeking to understand broader applications beyond basic examples.'
+    }
+    
+    return [metadata1, metadata2, metadata3]
+
+
 def test_summary_request(ollama_client):
     question1=Question(question_body="What is the color of the moon?", question_asked_time=time.time())
     question2=Question(question_body="Why does the moon look like different colors at different times?", question_asked_time=time.time())
@@ -106,4 +130,24 @@ def test_summary_realistic(ollama_client):
     assert summary_obj.summary is not None 
     assert '(1)' in summary_obj.summary, "summary object missing (1) attribute"
     assert '(2)' in summary_obj.summary, "summary object missing (2) attribute"
+
+def test_report_generated(ollama_client,sample_metadata_list ):
+
+    response = ollama_client.create_report(sample_metadata_list)    
+    content = response.message.content
+
+    start = content.find('{')
+    end = content.find('}') +1
+    
+    cleaned_response = json.loads(content[start:end])
+
+    #Checking all required keys exist in the response 
+    assert response is not None
+    assert cleaned_response['summary'] is not None
+    assert cleaned_response['number_of_questions'] is not None
+    assert cleaned_response['themes'] is not None and type(cleaned_response['themes']) is list  
+    assert cleaned_response['student_headspace'] is not None
+    assert cleaned_response['generated_time'] is not None
+
+
 
