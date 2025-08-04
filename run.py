@@ -1,9 +1,15 @@
 from aiskus_app import create_app
+import webbrowser
+from threading import Timer
 
 app = create_app()
 
+
 if __name__ == '__main__':
+
     app.run(host='0.0.0.0', port=5001, debug=True)
+    # Open browser after 1 second delay
+    
 
 
 # This code is the entry point for the Flask application.

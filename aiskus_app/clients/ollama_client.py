@@ -139,7 +139,6 @@ The required keys in the returned response are: 1.summary, 2.themes, 3.number_of
 
 Here is the summary metadata to analyze:
                 """
-
 class OllamaClient:
 
     def __init__(self, localhost='http://localhost:11434'):
