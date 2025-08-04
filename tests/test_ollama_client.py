@@ -142,7 +142,7 @@ def test_report_generated(ollama_client,sample_metadata_list ):
     cleaned_response = json.loads(content[start:end])
 
     #Checking all required keys exist in the response 
-    assert response is not None
+    assert response is not  None
     assert cleaned_response['summary'] is not None
     assert cleaned_response['number_of_questions'] is not None
     assert cleaned_response['themes'] is not None and type(cleaned_response['themes']) is list  

@@ -11,8 +11,8 @@ summaries_prompt_directions = """
         **Analysis Guidelines:**
 
         1. **Theme Identification:**
-        - Identify 3-7 main themes that capture the core areas of student confusion
-        - Use concise, descriptive phrases (2-5 words each)
+        - Identify 3-5 main themes that capture the core areas of student confusion
+        - Use concise, descriptive phrases (1-5 words each)
         - Look for overlapping patterns and consolidate related concepts
         - Focus on conceptual areas rather than specific question details
         - Use educational terminology that instructors would recognize
@@ -75,61 +75,69 @@ summaries_prompt_directions = """
 
         """
 report_prompt_directions ="""
-        You are an educational analytics assistant. You will receive a list of summary metadata objects, each containing themes and summaries from batches of student questions. Your task is to create a comprehensive report that combines all this information into a meaningful overview.
+     You are an educational analytics assistant. You will receive a list of summary metadata objects, each containing themes and summaries from batches of student questions. Your task is to create a comprehensive report that combines all this information into a meaningful overview.
 
-        **Input Format:**
-        You will receive a list of dictionaries, each containing:
-        - id: unique identifier
-        - themes: JSON string containing list of themes from that batch
-        - summary_str: three-paragraph summary string with tags (1), (2), (3)
+**Input Format:**
+You will receive a list of dictionaries, each containing:
+- id: unique identifier
+- themes: JSON string containing list of themes from that batch
+- summary_str: three-paragraph summary string with tags (1), (2), (3)
 
-        **Your Task:**
-        Analyze all the provided summary metadata and create a unified report that synthesizes the information across all batches.
+**Your Task:**
+Analyze all the provided summary metadata and create a unified report that synthesizes the information across all batches.
 
-        **Output Requirements:**
-        Return your response as a valid JSON object with exactly the below keys:
+**Output Requirements:**
+Return your response as a valid JSON object with exactly the below keys:
 
-        1. **summary**: A comprehensive summary combining insights from all summary_str fields. Structure this as:
-        - First paragraph: Overall knowledge gaps and difficulties across all batches
-        - Second paragraph: Consolidated advice for the teacher based on all patterns observed
-        - Third paragraph: Overall student sentiment analysis across all sessions
-        Ensure "summary" is spelled correctly.
+1. **summary**: A concise, scannable summary structured as:
+   - Key Struggle Areas: 3-4 easy-to-read and understandable sentences communicating the most critical knowledge gaps, connecting ideas and highlighting any persistent patterns in the knowledge gaps across multiple sessions.
+   - Next Steps: 2-3  3-4 easy-to-read and understandable sentences describing teaching approach adjustments which can be made in order to successfully provide clarity & address the knowledge gaps. Suggestions
+   can include asking the students specfic clarifying questions, or even wlaking through a specifc example.
+    Please seperate sentences into new lines when making a different points, make the summary easier to view & read visually by breaking up paragraph structure.
 
-        2. **themes**: A consolidated list of the most significant themes. Extract and deduplicate themes from all batches, keeping only the most meaningful ones (maximum 10 themes). Use 1-5 words per theme.
+2. **themes**: A consolidated list of the most significant themes. Extract and deduplicate themes from all batches, keeping only the most meaningful ones (maximum 10 themes). Use 1-5 words per theme.
 
-        3. **number_of_questions**: Calculate as 10 * (number of metadata items in the input list)
+3. **number_of_questions**: Calculate as 10 * (number of metadata items in the input list)
 
-        4. **generated_time**: Use the current timestamp when generating this report
-       
-        5. **student_headspace**: single sentence to represent the mood of the class to help teacher adapt teaching style
+4. **generated_time**: Use the current timestamp when generating this report
 
-        **Guidelines:**
-        - Identify recurring patterns across multiple summary batches
-        - Consolidate similar themes (e.g., "calculus derivatives" and "derivative confusion" should be merged)
-        - In the summary, highlight which concepts appear consistently problematic across sessions
-        - Provide actionable insights for the teacher based on the aggregate data
-        - Maintain the emotional tone analysis from individual summaries to create an overall class sentiment
+5. **student_headspace**: Single sentence describing the class mood to help teacher adapt teaching style
 
-        **Example Output Format:**     
-            
-        {
-        "summary": "Paragraph 1 about overall gaps... Paragraph 2 about teacher advice... Paragraph 3 about student sentiment...",
-        "themes": ["linear algebra", "derivative rules", "integration by parts", "matrix multiplication"],
-        "number_of_questions": 30,
-        "generated_time": 1672531200,
-        "student_headspace": "The students are frustrated due around complicated concepts but eager to learn."
-        }
+**Critical JSON Formatting Rules:**
+- Use \\n for line breaks within the summary string
+- Do not include actual line breaks or control characters
+- Escape all special characters properly
+- Test JSON validity before responding
 
-        **Important:** 
-        - Do not hallucinate information not present in the input
-        - Focus on patterns that appear across multiple batches
-        - If themes are similar, consolidate them intelligently
-        - Ensure the JSON is valid and properly formatted
+**Summary Writing Guidelines:**
+- Use bullet points for Key Struggling Areas and Immediate Actions
+- Keep each bullet point to 1-2 lines maximum
+- For struggling areas, explicitly note if issues appear across multiple sessions
+- Focus on the most critical 2-3 issues, not every problem mentioned
+- Make action recommendations focus on teaching method types rather than specific examples
+- Use active voice and concrete language
 
-        The required keys in the returned response are 1.summary, 2.themes, 3. number_of_questions, 4.generated_time, 5. student_headspace
+**Example Output Format:**
 
-        Here is the summary metadata to analyze:
+{
+  "summary": "Key Struggling Areas:\\n analysis goes here \\n Next Steps:\\n imporvements go here",
+  "themes": ["linear algebra", "derivative rules", "integration by parts", "matrix multiplication"],
+  "number_of_questions": 30,
+  "generated_time": 1672531200,
+  "student_headspace": "Students are frustrated around complicated concepts but eager to learn."
+}
 
+**Important:** 
+- Do not hallucinate information not present in the input
+- Focus on patterns that appear across multiple batches
+- Consolidate similar themes intelligently
+- Keep summary under 120 words total
+- Ensure JSON is valid and properly formatted with escaped newlines
+- Use \\n instead of actual line breaks in the summary field
+
+The required keys in the returned response are: 1.summary, 2.themes, 3.number_of_questions, 4.generated_time, 5.student_headspace
+
+Here is the summary metadata to analyze:
                 """
 
 class OllamaClient:

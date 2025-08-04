@@ -17,7 +17,7 @@ class ReportProcessor:
 
         try:
 
-            # need to implement DB manager. This aint scalable sis. 
+            # need to implement DB manager. This aint scalable 
             # TODO: Seperate DB concerns
             db_connection = get_db()
             if not db_connection:
@@ -95,8 +95,8 @@ class ReportProcessor:
             if not contents:
                 raise ValueError("No response contents from Ollama client")
             
-            start = contents.rfind('{')
-            end = contents.rfind('}') + 1
+            start = contents.find('{')
+            end = contents.find('}') + 1
                 
             if start == -1 or end == 0:
                 raise ValueError("No valid JSON found in Ollama response")

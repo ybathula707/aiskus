@@ -295,6 +295,16 @@
             }
         }
 
+                @keyframes blink {
+            0%, 45% { 
+                opacity: 1; 
+            }
+            46%, 100% { 
+                opacity: 0; 
+            }
+        }
+
+
         .report-card.expanded .report-content {
             max-height: 2000px;
             padding: 30px;
@@ -550,6 +560,173 @@
         }
     </style>
 </head>
+<!-- Sliding Pre-Lecture Overlay -->
+<div id="pre-lecture-overlay" class="pre-lecture-overlay">
+    <div class="overlay-content">
+        <div class="brain-icon">🧠</div>
+        <h1 class="title text-muted-pink-outlined">AISKUS</h1>
+        <p class="subtitle text-black-slick">Hello Prof ;)<span class="blinking-cursor">|</span></p>
+        
+        <button id="begin-lecture-overlay-btn" class="begin-lecture-btn">
+            <span class="icon">🎓</span>
+            Begin Lecture
+        </button>
+    </div>
+</div>
+
+<style>
+/* Pre-Lecture Overlay Styles */
+.pre-lecture-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, #febc9a 0%, #fed7b3 30%, #fee8cc 60%, #fffaf7 100%);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55), opacity 0.6s ease;
+}
+
+.pre-lecture-overlay.slide-up {
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.overlay-content {
+    text-align: center;
+    max-width: 800px;
+    width: 100%;
+    padding: 20px;
+}
+
+.pre-lecture-overlay .brain-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    user-select: none;
+    color: transparent;
+    -webkit-text-stroke: 2px black;
+    text-stroke: 2px black;
+}
+
+.pre-lecture-overlay .title {
+    font-size: 5rem;
+    text-align: center;
+    margin-bottom: 15px;
+    user-select: none;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+}
+
+.pre-lecture-overlay .subtitle {
+    font-size: 1.5rem;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    position: relative;
+    user-select: none;
+    margin-bottom: 60px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.pre-lecture-overlay .blinking-cursor {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: black;
+    animation: blink 1s step-start 0s infinite;
+    margin-left: 8px;
+    user-select: none;
+}
+
+.pre-lecture-overlay .begin-lecture-btn {
+    background: linear-gradient(45deg, #ffb8d7, #febc9a);
+    color: white;
+    border: none;
+    padding: 25px 60px;
+    font-size: 24px;
+    font-weight: 700;
+    border-radius: 70px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(254, 188, 154, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.pre-lecture-overlay .begin-lecture-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(254, 188, 154, 0.7);
+    background: linear-gradient(45deg, #ffcce0, #ffcaa3);
+}
+
+.pre-lecture-overlay .begin-lecture-btn .icon {
+    font-size: 1.3em;
+    animation: pulse 2s infinite;
+}
+
+/* Mobile responsiveness for overlay */
+@media (max-width: 768px) {
+    .pre-lecture-overlay .title {
+        font-size: 3.5rem;
+    }
+    .pre-lecture-overlay .subtitle {
+        font-size: 1.3rem;
+    }
+    .pre-lecture-overlay .brain-icon {
+        font-size: 2.5rem;
+    }
+    .pre-lecture-overlay .begin-lecture-btn {
+        padding: 20px 45px;
+        font-size: 20px;
+        letter-spacing: 2px;
+    }
+}
+
+@media (max-width: 480px) {
+    .pre-lecture-overlay .title {
+        font-size: 2.8rem;
+    }
+    .pre-lecture-overlay .subtitle {
+        font-size: 1.1rem;
+        margin-bottom: 40px;
+    }
+    .pre-lecture-overlay .brain-icon {
+        font-size: 2rem;
+    }
+    .pre-lecture-overlay .begin-lecture-btn {
+        font-size: 18px;
+        padding: 18px 35px;
+        letter-spacing: 1px;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const overlay = document.getElementById('pre-lecture-overlay');
+    const beginBtn = document.getElementById('begin-lecture-overlay-btn');
+    
+    beginBtn.addEventListener('click', function() {
+        // Open QR code page in new tab
+        window.open('/aiskus/teacher/qr', '_blank');
+        
+        // Slide the overlay up and away
+        overlay.classList.add('slide-up');
+        
+        // Optional: Remove overlay from DOM after animation
+        setTimeout(() => {
+            overlay.style.display = 'none';
+        }, 800); // Match the transition duration
+    });
+});
+</script>
+
 <body>
     <div class="main-container">
         <div class="header-section">
@@ -756,12 +933,12 @@
             }
             
             // Detailed Summary
-            if (report.summaary) { // Note: keeping the typo from your sample data
+            if (report.summary) { 
                 contentHtml += `
                     <div class="summary-content-section">
                         <strong>Detailed Analysis:</strong>
                         <div class="detailed-summary">
-                            ${report.summaary}
+                            ${report.summary}
                         </div>
                     </div>
                 `;

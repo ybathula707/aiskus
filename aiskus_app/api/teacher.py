@@ -5,10 +5,17 @@ import json
 
 teacher_aiskus_bp= Blueprint("teacher_aiskus_page", __name__, template_folder='teacher/request_report_page.html')
 
-@teacher_aiskus_bp.route("/teacher/live_summaries")
+@teacher_aiskus_bp.route("/aiskus/teacher/live-summaries")
 def teacher_home():
     return render_template('teacher/request_report_page.html')
 
+@teacher_aiskus_bp.route('/aiskus/teacher/pre-lecture')
+def teacher_pre_lecture():
+    return render_template('teacher/pre_lecture.html')
+
+@teacher_aiskus_bp.route("/aiskus/teacher/qr")
+def qr_code_page():
+    return render_template('teacher/qr.html')
 
 @teacher_aiskus_bp.route('/get/summaries/latest', methods=['GET'])
 def get_latest_summaries():

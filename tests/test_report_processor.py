@@ -82,7 +82,8 @@ def sample_ollama_response():
 @pytest.fixture
 def test_reports_processor():
     yield ReportProcessor()
-def insert_test_data(db_connection, summary_objects):
+
+def _insert_test_data(db_connection, summary_objects):
     """Helper function to insert test data into database"""
     cursor = db_connection.cursor()
     
@@ -104,7 +105,7 @@ def insert_test_data(db_connection, summary_objects):
 
 def test_get_unprocessed_summaries(app_with_temp_db, test_question_objects):
     """
-    Test that get_unqueried_themes_before_timestamp correctly:
+    Test that _get_unprocessed_summaries correctly:
     1. Retrieves only rows with first_question_time before the timestamp
     2. Retrieves only rows where queried = 0 (False)
     3. Orders results by first_question_time DESC
@@ -117,7 +118,7 @@ def test_get_unprocessed_summaries(app_with_temp_db, test_question_objects):
         request_timestamp = 5000  # Should get summaryObj1 and summaryObj2, not summaryObj3
         
         # Insert test data
-        insert_test_data(db_connection, test_question_objects)
+        _insert_test_data(db_connection, test_question_objects)
         
         # Act
         result = processor._get_unprocessed_summaries(db_connection, request_timestamp)
@@ -158,7 +159,7 @@ def test_transform_rows_to_metadata(app_with_temp_db, test_question_objects, tes
         request_timestamp = 5000  # Should get summaryObj1 and summaryObj2, not summaryObj3
         
         # Insert test data
-        insert_test_data(db_connection, test_question_objects)
+        _insert_test_data(db_connection, test_question_objects)
         
         # Get rows from database
         rows = test_reports_processor._get_unprocessed_summaries(
@@ -203,3 +204,75 @@ def test_parse_to_json(test_reports_processor,sample_ollama_response):
     assert parsed["generated_time"] is not None
     assert parsed["student_headspace"] is not None
 
+def test_generate_report(test_question_objects, app_with_temp_db, monkeypatch):
+   
+    with app_with_temp_db.app_context():
+        #DUPLICATED because I'm need practice using mocks properly w/ollama client 
+        """
+        External dependencies to mockerooni
+            1. mock db + insert data
+            2. mock application ollama clinet + response
+            3. mock the call to ollama client
+        """
+        #DB test data
+        temp_db = get_db()
+        _insert_test_data(temp_db, test_question_objects)
+        request_timestamp = 5000  # Should get summaryObj1 and summaryObj2, not summaryObj3
+
+        #mock client call + response
+        mock_ollama_response = Mock()
+        mock_ollama_response.message = Mock()
+        mock_ollama_response.message.content = """
+        Here is the analysis of student questions:
+        
+        {
+            "summary": "Students demonstrate gaps in understanding derivatives and chain rule applications. Need more step-by-step examples.",
+            "themes": ["derivative applications", "chain rule confusion", "notation interpretation"],
+            "number_of_questions": 2,
+            "generated_time": 1672534800,
+            "student_headspace": "Students are frustrated but eager to learn."
+        }
+        
+        This analysis should help instructors.
+        """
+        mock_ollama_client = Mock()
+        mock_ollama_client.create_report.return_value= mock_ollama_response
+
+        #patching the applicaiton runtime's ollama client w/ test client
+        monkeypatch.setattr(app_with_temp_db, 'session_ollama_client', mock_ollama_client)
+        
+        #setting up test instance of report processor
+        report_processor = ReportProcessor()
+
+        result = report_processor.generate_report(request_timestamp)
+
+        # Assert - Verify the results
+        assert "report" in result, "Result should contain 'report' key"
+        
+        report = result["report"]
+        assert isinstance(report, dict), "Report should be a dictionary"
+        
+        # Check all expected fields are present
+        expected_fields = ["summary", "themes", "number_of_questions", "generated_time", "student_headspace"]
+        for field in expected_fields:
+            assert field in report, f"Report should contain '{field}' field"
+        
+        # Verify data types and content
+        assert isinstance(report["themes"], list), "Themes should be a list"
+        assert isinstance(report["number_of_questions"], int), "Number of questions should be an integer"
+        assert isinstance(report["summary"], str), "Summary should be a string"
+        assert len(report["themes"]) > 0, "Should have at least one theme"
+        
+        # Verify the Ollama client was called with correct data
+        mock_ollama_client.create_report.assert_called_once()
+        
+        # Get the metadata that was passed to Ollama
+        call_args = mock_ollama_client.create_report.call_args[0][0]
+        assert isinstance(call_args, list), "Should pass list of metadata to Ollama"
+        assert len(call_args) == 2, "Should pass 2 unprocessed summaries"
+        
+        # Verify metadata structure
+        for metadata in call_args:
+            assert "id" in metadata, "Metadata should contain id"
+            assert "themes" in metadata, "Metadata should contain themes"
+            assert "summary_str" in metadata, "Metadata should contain summary_str"
