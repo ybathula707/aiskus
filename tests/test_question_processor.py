@@ -7,7 +7,7 @@ from aiskus_app.models.question import Question
 from aiskus_app.models.summary import Summary
 from aiskus_app.clients.ollama_client import OllamaClient
 from aiskus_app import create_app
-from aiskus_app.services.questionProcessor import QuestionProcessor
+from aiskus_app.services.question_processor import QuestionProcessor
 import tempfile
 import os
 import shutil

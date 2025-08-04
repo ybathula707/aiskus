@@ -23,7 +23,6 @@ def init_db():
     db.executescript(CREATE_SCHEMA_TABLE_SQL)
     db.commit()
 
-    
 
 @click.command('init-db')
 def init_db_command():

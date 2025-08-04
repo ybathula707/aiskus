@@ -171,7 +171,7 @@ class OllamaClient:
         Take the dictonary, and prompt model to generate a meaninful report JSON easily accessed by fronted.
         {
             themes: (list str)
-            report: (str block)
+            summary: (str block)
             numQs: (int for batch size?)
             generated time (epoch)
 

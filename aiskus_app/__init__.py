@@ -2,7 +2,7 @@ import os
 from flask import Flask
 import atexit
 import signal
-from .services.questionProcessor import QuestionProcessor
+from .services.question_processor import QuestionProcessor
 from .services.report_processor import ReportProcessor
 from .clients.ollama_client import OllamaClient
 
@@ -31,6 +31,12 @@ def create_app():
     app.session_question_processor = QuestionProcessor()
     app.session_report_processor = ReportProcessor()
     app.session_ollama_client = OllamaClient()
+
+    from .api.student import student_aiskus_bp
+    app.register_blueprint(student_aiskus_bp)
+
+    from .api.teacher import teacher_aiskus_bp
+    app.register_blueprint(teacher_aiskus_bp)
     """
     setting up a singleton intance of the QuestionProcessor class 
     and report processor class for the lifecycle of the flask applicaition object.
@@ -82,12 +88,6 @@ def create_app():
     
     signal.signal(signal.SIGTERM, signal_handler)
     signal.signal(signal.SIGINT, signal_handler)  # Ctrl+C
-
-    from .api.student import student_aiskus_bp
-    app.register_blueprint(student_aiskus_bp)
-
-    from .api.teacher import teacher_aiskus_bp
-    app.register_blueprint(teacher_aiskus_bp)
  
     return app
 

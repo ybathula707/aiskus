@@ -95,9 +95,7 @@ class ReportProcessor:
             if not contents:
                 raise ValueError("No response contents from Ollama client")
             
-            start = contents.find('{')
-            end = contents.find('}') + 1
-
+            start = contents.rfind('{')
             end = contents.rfind('}') + 1
                 
             if start == -1 or end == 0:

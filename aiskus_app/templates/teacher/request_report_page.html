@@ -619,7 +619,7 @@
             errorDiv.style.display = 'none';
             
             // Make API call to backend with epoch timestamp
-            fetch(`/teacher_aiskus/get/summaries/latest?timestamp=${epochTimestamp}`, {
+            fetch(`/get/summaries/latest?timestamp=${epochTimestamp}`, {
                 method: "GET",
                 headers: { 
                     "Content-Type": "application/json" 

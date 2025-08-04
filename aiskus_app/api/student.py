@@ -21,22 +21,38 @@ def post_question():
         question_body_str = data.get('question_body') if data else None
 
         if not question_body_str:   
-            return jsonify({"status": "failure",
-                            "message": "malformed question body",
-                            "error": f"{e}",}), 400
+            return jsonify(
+                {"status": "failure",
+                "message": "malformed question body",
+                "error": f"{e}",}
+                ), 400
         
         student_question=Question(
             question_body=question_body_str, 
             question_asked_time=time.time()
             )
+        
         current_app.session_question_processor.processQuestion(student_question)
 
-        return jsonify({"status": "success",
-                        "message": "message queued successfully",}), 200
+        return jsonify({
+            "status": "success",
+            "message": "message queued successfully",
+            }), 200
+    
+    
+    except ValueError as e:
+        return jsonify({
+            "status": "Processing error",
+            "message": "Vlaue error returned from question processor",
+            "error" : f"{e}"
+        })
+    
     except Exception as e:
-        return jsonify({"status": "internal failure",
-                        "message": "Question unable to be processed at this time",
-                        "arror": f"{e}" }), 500
+        return jsonify({
+            "status": "internal failure",
+             "message": "Question unable to be processed at this time",
+            "error": f"{e}" }
+            ), 500
     
 
     """ 
