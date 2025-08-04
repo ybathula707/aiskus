@@ -55,7 +55,7 @@ def test_insert_and_fetch(app_with_temp_db):
         db = get_db()
         db.execute(
             "INSERT INTO themes_and_summaries "
-            "(first_question_time, last_question_time, themes_json, summary_str, queried) "
+            "(first_question_time, last_question_time, themes, summary_str, queried) "
             "VALUES (?, ?, ?, ?, ?)",
             (1623456000, 1623459600, json.dumps(["algorithms"]), "Batch summary example", 0)
         )
@@ -73,7 +73,7 @@ def test_invalid_insert_and_fetch(app_with_temp_db):
         db = get_db()
         with pytest.raises(Exception) as execinfo:
             db.execute("INSERT INTO themes_and_summaries "
-            "(first_question_time, last_question_time, themes_json, summary_str, queried) "
+            "(first_question_time, last_question_time, themes, summary_str, queried) "
             "VALUES (?, ?, ?, ?, ?)",
             (1623456000, 1623459600,"Batch summary example", 0))
             db.commit()
