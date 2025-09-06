@@ -87,13 +87,22 @@ You will receive a list of dictionaries, each containing:
 Analyze all the provided summary metadata and create a unified report that synthesizes the information across all batches.
 
 **Output Requirements:**
-Return your response as a valid JSON object with exactly the below keys:
+Return your response as a valid JSON object with exactly the below fromat and four keys:
 
-1. **summary**: A concise, scannable summary structured as:
-   - Key Struggle Areas: 3-4 easy-to-read and understandable sentences communicating the most critical knowledge gaps, connecting ideas and highlighting any persistent patterns in the knowledge gaps across multiple sessions.
-   - Next Steps: 2-3  3-4 easy-to-read and understandable sentences describing teaching approach adjustments which can be made in order to successfully provide clarity & address the knowledge gaps. Suggestions
+Return ONLY a valid JSON object with these exact keys. Here is an example:
+        {
+        "summary": "Key Struggle Areas:\nStudents are struggling with theme x and theme y, this is persistent over the analysis of previous x reports generated. Confusion in theme x is likeley related to confusion in y because of confusion in examples discussed.\n\n\nNext Steps:\n Instructor should revisit an example...",
+        "themes": ["theme1", "theme2", "theme3"],
+        "number_of_questions": <integer>,
+        "student_headspace": "Single sentence describing the gist of the class mood"
+        }
+Detailed explanation of each attribute in the response:
+
+1. **summary**: A concise, scannable summary structured with only the below two sections, three newlines between the two sections.
+   - section 1: Key Struggle Areas: 3-4 easy-to-read and understandable sentences communicating the most critical knowledge gaps, connecting ideas by highlighting any persistent patterns in the knowledge gaps across multiple sessions.
+
+   - sections 2: Next Steps: 2-3  3-4 easy-to-read and understandable sentences describing teaching approach adjustments which can be made in order to successfully provide clarity & address the knowledge gaps. Suggestions
    can include asking the students specfic clarifying questions, or even wlaking through a specifc example.
-    Please seperate sentences into new lines when making a different points, make the summary easier to view & read visually by breaking up paragraph structure.
 
 2. **themes**: A consolidated list of the most significant themes. Extract and deduplicate themes from all batches, keeping only the most meaningful ones (maximum 10 themes). Use 1-5 words per theme.
 
@@ -115,12 +124,12 @@ Return your response as a valid JSON object with exactly the below keys:
 - For struggling areas, explicitly note if issues appear across multiple sessions
 - Focus on the most critical 2-3 issues, not every problem mentioned
 - Make action recommendations focus on teaching method types rather than specific examples
-- Use active voice and concrete language
+- Use active voice and concrete, simple language
 
 **Example Output Format:**
 
 {
-  "summary": "Key Struggling Areas:\\n analysis goes here \\n Next Steps:\\n imporvements go here",
+  "summary": "Key Struggling Areas:\\n analysis goes here \n\n\n Next Steps:\\n imporvements go here",
   "themes": ["linear algebra", "derivative rules", "integration by parts", "matrix multiplication"],
   "number_of_questions": 30,
   "generated_time": 1672531200,
@@ -132,6 +141,7 @@ Return your response as a valid JSON object with exactly the below keys:
 - Focus on patterns that appear across multiple batches
 - Consolidate similar themes intelligently
 - Keep summary under 120 words total
+- Use simple language without compilcated words. 
 - Ensure JSON is valid and properly formatted with escaped newlines
 - Use \\n instead of actual line breaks in the summary field
 
@@ -139,7 +149,6 @@ The required keys in the returned response are: 1.summary, 2.themes, 3.number_of
 
 Here is the summary metadata to analyze:
                 """
-
 class OllamaClient:
 
     def __init__(self, localhost='http://localhost:11434'):
@@ -148,7 +157,7 @@ class OllamaClient:
 
     """
     summary_request
-    Parameters: list of batched question obhects from the question processor
+    Parameters: list of batched question objects from the question processor
 
     Receives the list of questions. Sends them in a chat to the model, along with the prompt:
         - prompt goals:

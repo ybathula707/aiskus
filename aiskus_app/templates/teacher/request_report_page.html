@@ -35,17 +35,21 @@
             margin-bottom: 15px;
             user-select: none;
             color: transparent;
-            -webkit-text-stroke: 2px black;
-            text-stroke: 2px black;
+            -webkit-text-stroke: 2px white; /* Changed from black to white */
+            text-stroke: 2px white; /* Changed from black to white */
         }
 
         .text-muted-pink-outlined {
-            color: #d8789b !important;
+            color: #ff69b4 !important; /* Brighter hot pink */
             text-shadow: 
-              -1px -1px 0 #000,
-              1px -1px 0 #000,
-              -1px 1px 0 #000,
-              1px 1px 0 #000;
+              -2px -2px 0 #fff,  /* White outline instead of black */
+              2px -2px 0 #fff,
+              -2px 2px 0 #fff,
+              2px 2px 0 #fff,
+              -2px 0 0 #fff,
+              2px 0 0 #fff,
+              0 -2px 0 #fff,
+              0 2px 0 #fff;
             font-weight: 900 !important;
         }
         
@@ -55,15 +59,15 @@
         }
 
         .title {
-            font-size: 4rem;
+            font-size: 4.5rem; /* Slightly larger for better proportion */
             text-align: center;
-            margin-bottom: 5px;
+            margin-bottom: 5px; /* Keep original gap to reports container */
             user-select: none;
-            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
         }
 
         .subtitle {
-            font-size: 1.25rem;
+            font-size: 1.4rem; /* Slightly larger */
             text-align: center;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             position: relative;
@@ -72,9 +76,24 @@
             filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
         }
 
+        /* ADDED: Blinking cursor for subtitle */
+        .blinking-cursor {
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: black;
+            animation: blink 1s step-start 0s infinite;
+            margin-left: 8px;
+            user-select: none;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
         /* Get Summaries Button */
         .mind-read-btn {
-            background: linear-gradient(45deg, #ffb8d7, #febc9a);
+            background: linear-gradient(45deg, #ff69b4, #febc9a); /* Updated to brighter pink */
             color: white;
             border: none;
             padding: 20px 50px;
@@ -83,7 +102,7 @@
             border-radius: 60px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 8px 25px rgba(254, 188, 154, 0.4);
+            box-shadow: 0 8px 25px rgba(255, 105, 180, 0.4); /* Updated shadow */
             text-transform: uppercase;
             letter-spacing: 2px;
             position: relative;
@@ -96,13 +115,13 @@
 
         .mind-read-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 35px rgba(254, 188, 154, 0.6);
-            background: linear-gradient(45deg, #ffcce0, #ffcaa3);
+            box-shadow: 0 12px 35px rgba(255, 105, 180, 0.6); /* Updated shadow */
+            background: linear-gradient(45deg, #ff87ce, #ffcaa3);
         }
 
         .mind-read-btn:active {
             transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(254, 188, 154, 0.4);
+            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.4); /* Updated shadow */
         }
 
         .mind-read-btn.loading {
@@ -125,8 +144,10 @@
             background: white;
             border-radius: 25px;
             padding: 40px;
-            box-shadow: 0 10px 30px rgba(255, 184, 215, 0.4);
+            box-shadow: 0 15px 35px rgba(255, 105, 180, 0.25); /* Updated shadow color */
+            border: 3px solid white; /* Added white border */
             margin-bottom: 40px;
+            margin-top: 60px; /* UPDATED: Moved slightly lower to add space */
             min-height: 800px;
             display: flex;
             flex-direction: column;
@@ -141,14 +162,14 @@
 
         .reports-title {
             font-size: 2rem;
-            color: #d8789b;
+            color: #ff69b4; /* Updated to brighter pink */
             font-weight: 700;
             margin-bottom: 10px;
             text-shadow: 
-              -0.5px -0.5px 0 #000,
-              0.5px -0.5px 0 #000,
-              -0.5px 0.5px 0 #000,
-              0.5px 0.5px 0 #000;
+              -1px -1px 0 #fff,  /* White outline instead of black */
+              1px -1px 0 #fff,
+              -1px 1px 0 #fff,
+              1px 1px 0 #fff;
         }
 
         .reports-subtitle {
@@ -227,7 +248,7 @@
         }
 
         .report-card.current .report-header {
-            background: linear-gradient(45deg, #ffb8d7, #febc9a);
+            background: linear-gradient(45deg, #ff69b4, #febc9a); /* Updated to brighter pink */
             cursor: default;
         }
 
@@ -295,16 +316,6 @@
             }
         }
 
-                @keyframes blink {
-            0%, 45% { 
-                opacity: 1; 
-            }
-            46%, 100% { 
-                opacity: 0; 
-            }
-        }
-
-
         .report-card.expanded .report-content {
             max-height: 2000px;
             padding: 30px;
@@ -353,7 +364,7 @@
         }
 
         .summary-content-section strong {
-            color: #d8789b;
+            color: #ff69b4; /* Updated to brighter pink */
             display: block;
             margin-bottom: 10px;
             font-size: 1.1rem;
@@ -429,7 +440,7 @@
         }
 
         .stat-value {
-            color: #d8789b;
+            color: #ff69b4; /* Updated to brighter pink */
             font-size: 1.1rem;
             font-weight: 700;
         }
@@ -460,10 +471,10 @@
         /* Mobile Responsiveness */
         @media (max-width: 768px) {
             .title {
-                font-size: 3rem;
+                font-size: 3.5rem;
             }
             .subtitle {
-                font-size: 1.1rem;
+                font-size: 1.2rem;
             }
             .brain-icon {
                 font-size: 2rem;
@@ -471,6 +482,7 @@
             .reports-container {
                 padding: 25px;
                 min-height: 600px;
+                margin-top: 50px; /* Adjusted for mobile */
             }
             .mind-read-btn {
                 padding: 15px 35px;
@@ -509,15 +521,16 @@
                 padding: 20px;
                 border-radius: 20px;
                 min-height: 500px;
+                margin-top: 40px; /* Adjusted for mobile */
             }
             
             .title {
-                font-size: 2.5rem;
+                font-size: 2.8rem;
                 line-height: 1.1;
             }
             
             .subtitle {
-                font-size: 1rem;
+                font-size: 1.1rem;
                 margin-bottom: 20px;
                 line-height: 1.3;
             }
@@ -608,8 +621,8 @@
     margin-bottom: 20px;
     user-select: none;
     color: transparent;
-    -webkit-text-stroke: 2px black;
-    text-stroke: 2px black;
+    -webkit-text-stroke: 2px white; /* Updated to white */
+    text-stroke: 2px white; /* Updated to white */
 }
 
 .pre-lecture-overlay .title {
@@ -640,7 +653,7 @@
 }
 
 .pre-lecture-overlay .begin-lecture-btn {
-    background: linear-gradient(45deg, #ffb8d7, #febc9a);
+    background: linear-gradient(45deg, #ff69b4, #febc9a); /* Updated to brighter pink */
     color: white;
     border: none;
     padding: 25px 60px;
@@ -649,7 +662,7 @@
     border-radius: 70px;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 10px 30px rgba(254, 188, 154, 0.5);
+    box-shadow: 0 10px 30px rgba(255, 105, 180, 0.5); /* Updated shadow */
     text-transform: uppercase;
     letter-spacing: 3px;
     position: relative;
@@ -661,8 +674,8 @@
 
 .pre-lecture-overlay .begin-lecture-btn:hover {
     transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(254, 188, 154, 0.7);
-    background: linear-gradient(45deg, #ffcce0, #ffcaa3);
+    box-shadow: 0 15px 40px rgba(255, 105, 180, 0.7); /* Updated shadow */
+    background: linear-gradient(45deg, #ff87ce, #ffcaa3);
 }
 
 .pre-lecture-overlay .begin-lecture-btn .icon {
@@ -732,7 +745,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="header-section">
             <div class="brain-icon">🧠</div>
             <h1 class="title text-muted-pink-outlined">AISKUS</h1>
-            <p class="subtitle text-black-slick">mind reading dashboard - insights from your questions</p>
+            <p class="subtitle text-black-slick">mind reading dashboard - insights from your questions<span class="blinking-cursor">|</span></p>
         </div>
         
         <!-- Get Summaries Button -->
@@ -991,7 +1004,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     "generated_time": Math.floor(Date.now() / 1000),
                     "number_of_questions": 10,
                     "student_headspace": "Students are intrigued by the subject matter but struggle with the underlying concepts, indicating a need for more supportive and clear explanations.",
-                    "summaary": "Overall, the student questions reveal significant knowledge gaps in understanding celestial mechanics, particularly concerning the moon's phases, seasonal variations, and the underlying reasons for natural phenomena. A common difficulty lies in grasping the conceptual understanding of explanations provided, indicating a need for more accessible and varied teaching approaches. Student sentiment is characterized by a mix of curiosity and frustration, with some expressing confusion and a desire for clearer communication. \n\nBased on these patterns, instructors should prioritize incorporating visual aids and interactive simulations to illustrate complex concepts. Employing multiple explanations, utilizing analogies and step-by-step breakdowns, and fostering peer discussion are crucial strategies.  It's important to build foundational understanding before progressing to more advanced topics.  Providing opportunities for students to ask clarifying questions and addressing misconceptions directly will enhance comprehension. \n\nThe overall student sentiment suggests a desire for foundational clarity and increased confidence in understanding basic astronomical concepts. While students are curious and engaged, they also express frustration when explanations are unclear or difficult to follow.  Adapting teaching styles to be more accessible and provide more scaffolding is essential to address this sentiment.",
+                    "summary": "Overall, the student questions reveal significant knowledge gaps in understanding celestial mechanics, particularly concerning the moon's phases, seasonal variations, and the underlying reasons for natural phenomena. A common difficulty lies in grasping the conceptual understanding of explanations provided, indicating a need for more accessible and varied teaching approaches. Student sentiment is characterized by a mix of curiosity and frustration, with some expressing confusion and a desire for clearer communication. \n\nBased on these patterns, instructors should prioritize incorporating visual aids and interactive simulations to illustrate complex concepts. Employing multiple explanations, utilizing analogies and step-by-step breakdowns, and fostering peer discussion are crucial strategies.  It's important to build foundational understanding before progressing to more advanced topics.  Providing opportunities for students to ask clarifying questions and addressing misconceptions directly will enhance comprehension. \n\nThe overall student sentiment suggests a desire for foundational clarity and increased confidence in understanding basic astronomical concepts. While students are curious and engaged, they also express frustration when explanations are unclear or difficult to follow.  Adapting teaching styles to be more accessible and provide more scaffolding is essential to address this sentiment.",
                     "themes": [
                         "celestial motion",
                         "lunar phases", 

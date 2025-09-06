@@ -5,6 +5,8 @@ import signal
 from .services.question_processor import QuestionProcessor
 from .services.report_processor import ReportProcessor
 from .clients.ollama_client import OllamaClient
+import webbrowser
+from threading import Timer
 
 def create_app():
     app = Flask(__name__)
@@ -37,6 +39,7 @@ def create_app():
 
     from .api.teacher import teacher_aiskus_bp
     app.register_blueprint(teacher_aiskus_bp)
+
     """
     setting up a singleton intance of the QuestionProcessor class 
     and report processor class for the lifecycle of the flask applicaition object.
@@ -49,13 +52,14 @@ def create_app():
     instance as well.
     
     """
+    
+    webbrowser.open_new('http://127.0.0.1:5001/')
 
-      
     # Register cleanup functions
     def cleanup_app():
         """Cleanup function called on app shutdown."""
         app.logger.info("Starting application cleanup...")
-        
+
         try:
             # Clean up processors if they have cleanup methods
             if hasattr(app.session_question_processor, 'cleanup'):
