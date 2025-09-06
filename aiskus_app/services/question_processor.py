@@ -49,11 +49,15 @@ class QuestionProcessor:
                 response=current_app.session_ollama_client.summary_request(self.batch_questions)
                 response_contents = response.message.content
 
+
                 if not response_contents:
                    raise ValueError("Empty response froom ollama client")
-                   
+                
+                print(f"Response type: {type(response_contents)}")
                 
                 cleaned_data=self.__parse_to_json(response_contents)
+                print(f"Response type: {type(cleaned_data)}")
+
                 summary_object=Summary(first_question_time=cleaned_data['first_question_time'],
                                         last_question_time=cleaned_data['last_question_time'],
                                         themes=cleaned_data['themes'],
