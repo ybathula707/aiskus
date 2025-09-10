@@ -13,3 +13,10 @@ protect student’s anonymity
 Application serves a landing page to students in a classroom via:
 Serves a QR code, or simple url that, once scanned, directs students to a simple UI where they can type up their questions and hit submit. 
 The input source is Hosted on local network, while the processing is done completely on teachers machine
+
+
+====
+
+Implementation details and future architecture changes to be added
+
+===
